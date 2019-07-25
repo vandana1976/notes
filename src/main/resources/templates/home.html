@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<ul>
+    <li th:each="note:${notes}">
+        <div th:unless="${note.edit}">
+        <h2><span th:text="${note.title}"></span></h2>
+        <p><span th:text="${note.body}"></span></p>
+        </div>
+        <div>
+            <form th:if="${note.isEdit()}" th:object="${editNote}" th:id="|edit${note.id}|" th:action="@{|/${note.getId()}|}" method="post">
+                <input type="hidden" th:field="*{id}" th:value="${note.id}"/>
+                <input th:field="*{title}"/>
+                <textarea th:field="*{body}">
+                </textarea>
+            </form>
+        </div>
+            <form th:unless="${note.edit}" th:action="@{|/${note.getId()}|}" method="get">
+                <button type= "submit">Edit</button>
+            </form>
+
+            <button th:if="${note.edit}" type="submit" th:form="|edit${note.getId()}|">Save</button>
+            <form th:action="@{|/${note.getId()}|}" method="post">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    </li>
+
+</ul>
+<form th:action="@{/new}" method="get">
+    <button type="submit">Add</button>
+</form>
+
+</body>
+</html>
